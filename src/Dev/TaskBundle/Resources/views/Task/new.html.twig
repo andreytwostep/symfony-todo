@@ -1,0 +1,26 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Task creation</h1>
+
+    {#{{ form(form) }}#}
+
+
+    <form action="{{ path('task_create', { 'id':entity.id }) }}" method="post" {{ form_enctype(form) }}>
+        {#<input type="hidden" name="_method" value="PUT" />#}
+        {{ form_errors(form) }}
+        {{ form_row(form.task) }}
+        {{ form_rest(form) }}
+        {#<p>#}
+        {#<button type="submit">Edit*</button>#}
+        {#</p>#}
+    </form>
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('task') }}">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+{% endblock %}

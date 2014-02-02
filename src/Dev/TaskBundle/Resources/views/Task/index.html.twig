@@ -1,0 +1,48 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1 class="title">todos</h1>
+    <div id="todo-block">
+    <div id="header"></div>
+
+    <ul class="records_list">
+        <li class="task-create">
+            <div id="main-create">
+                <form action="{{ path('task_create') }}" method="post" {{ form_enctype(form) }}>
+                    {{ form_errors(form) }}
+                    {{ form_row(form.task) }}
+                    {{ form_rest(form) }}
+                </form>
+            </div>
+        </li>
+        {% for entity in entities %}
+            <li class="task-item">
+                <div id="task-complete-{{ entity.id }}">
+                    <a class="ajax-task-complete" href="{{ path('task_edit', { 'id': entity.id }) }}">{% if entity.complete %} &#9745; {% else %} &#9744; {% endif %}</a>
+                </div>
+                <div class="task-elem">
+                    <div class="{% if entity.complete %}task-done{% else %}task-undone{% endif %}">
+                        <a class="ajax-task-edit" href="{{ path('task_edit', { 'id': entity.id }) }}">{{ entity.task }}</a>
+                        <input class="edit-task" type="text" value="{{ entity.task }}" />
+                    </div>
+                    <div class="ajax-task-delete" href="{{ path('task_delete', { 'id': entity.id }) }}"></div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+    <footer id="footer" style="display: block;">
+        <span id="todo-count">
+            <strong id="counter">
+                {% set counter = 0 %}
+                {% set ids = '' %}
+                {% for entity in entities %}
+                    {% if entity.complete %} {% set counter = counter + 1 %} {% set ids = ids ~ ',' ~ entity.id %} {% endif %}
+                {% endfor %}
+                {{ entities|length - counter }}
+               </strong> items left</span>
+        <a id="clear-completed" data-ids="{{ ids|slice(1) }}" href="{{ path('task_delete', { 'id': 0 }) }}">
+            Clear completed (<span id="completed">{{ counter }} </span>)
+        </a>
+    </footer>
+{% endblock %}
